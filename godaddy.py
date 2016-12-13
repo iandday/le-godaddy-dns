@@ -1,18 +1,23 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 import os
 import sys
 import logging
 import godaddypy
+import ConfigParser
 
-if "GD_KEY" not in os.environ:
-    raise Exception("Missing Godaddy API-key in GD_KEY environment variable! Please register one at https://developer.godaddy.com/keys/")
 
-if "GD_SECRET" not in os.environ:
-    raise Exception("Missing Godaddy API-secret in GD_SECRET environment variable! Please register one at https://developer.godaddy.com/keys/")
+config_parser = ConfigParser.RawConfigParser()
+config_parser.read('keys')
 
-api_key = os.environ["GD_KEY"]
-api_secret = os.environ["GD_SECRET"]
+
+try:
+    api_key = config_parser.get(go_daddy, 'api_key')
+    api_secret = config_parser.get(go_daddy, 'api_secret')
+except:
+    print("Problem reading API key/secret from keys file")
+    sys.exit(1)
+
 my_acct = godaddypy.Account(api_key=api_key, api_secret=api_secret)
 client = godaddypy.Client(my_acct)
 
